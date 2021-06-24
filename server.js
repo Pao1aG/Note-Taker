@@ -52,25 +52,37 @@ app.post("/api/notes", async function (req, res) {
       console.log(newNote); //shows new object
 
       const data = await fs.readFile("./db/db.json", "utf8");
-      //Parsing the data from json file, and then stringifying it 
-      let str = JSON.stringify(JSON.parse(data)); //found at t.ly/mscR
-      // console.log("str original: " + str)
-      //Substring takes in the start and the end, and returns what's in-between
-      // Starting at index 0, and then cutting off the ] at end
-      str = str.substring(0, str.length - 1);
-      // console.log("str after:    " + str)
+      
+      if (data.charAt(0) !== "") {
+        console.log("There are notes saved here")
+        //Parsing the data from json file, and then stringifying it 
+        let str = JSON.stringify(JSON.parse(data)); //found at t.ly/mscR
+        // console.log("str original: " + str)
+        //Substring takes in the start and the end, and returns what's in-between
+        // Starting at index 0, and then cutting off the ] at end
+        str = str.substring(0, str.length - 1);
+        // console.log("str after:    " + str)
+  
+        // Making the newly added note into a string
+        const stringNote = JSON.stringify(newNote);
+        // console.log("str note:     " + stringNote)
+  
+        //Concatenating the old and new data
+        console.log("str append:   " + `${str},${stringNote}]`)
+        await fs.writeFile("./db/db.json", `${str},${stringNote}]`);
+  
+  
+        //Make window reload after post
+        window.location.reload();
 
-      // Making the newly added note into a string
-      const stringNote = JSON.stringify(newNote);
-      // console.log("str note:     " + stringNote)
+      } else {
+        console.log("This is the first saved note");
 
-      //Concatenating the old and new data
-      console.log("str append:   " + `${str},${stringNote}]`)
-      await fs.writeFile("./db/db.json", `${str},${stringNote}]`);
+        const stringNote = JSON.stringify(newNote);
+        await fs.writeFile("./db/db.json", `[${stringNote}]`);
 
-
-      //Make window reload after post
-      window.location.reload();
+        window.location.reload();
+      }
 
 
   } catch (err) {
