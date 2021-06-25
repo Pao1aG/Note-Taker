@@ -27,11 +27,9 @@ app.get("/notes", function (req, res) {
 // GET - /api/notes
 app.get("/api/notes", async function (req, res) {
   try {
-      // console.log("hello! im triggered (get)")
       const data = await fs.readFile("./db/db.json", "utf8");
       res.json(JSON.parse(data));
-      //This is where I need to do something to display note when clicked!
-      // console.log("This is at the get" + data);//shows object within array in db.json
+      // console.log(data);//shows object within array in db.json
   } catch (err) {
       res.status(500).end("Server failed at get");
   }
@@ -39,9 +37,9 @@ app.get("/api/notes", async function (req, res) {
 
 // POST - /api/notes
 app.post("/api/notes/", async function (req, res) {
-  console.log("did I post?");
   try {
      const newNote = req.body;
+     //Adding an id that equals the title of the note
      newNote.id = req.body.title;
     //  var newNote = {
     //    title: req.body.title,
@@ -52,7 +50,7 @@ app.post("/api/notes/", async function (req, res) {
 
       const data = await fs.readFile("./db/db.json", "utf8");
       
-      //because empty array when starting
+      //because we begin with an empty array in db.json
       if (data.length > 2) {
         console.log("There are notes saved here")
         //Parsing the data from json file, and then stringifying it 
@@ -71,7 +69,7 @@ app.post("/api/notes/", async function (req, res) {
         console.log("str append:   " + `${str},${stringNote}]`)
         await fs.writeFile("./db/db.json", `${str},${stringNote}]`);
   
-        res.send();
+        res.send(); //need this to send to the frontend
        
 
       } else {
@@ -87,7 +85,7 @@ app.post("/api/notes/", async function (req, res) {
   }
 });
 
-// DELETE - /api/notes/:id NEED TO HAVE EACH SAVED NOTE TO HAVE THEIR OWN ID
+// DELETE - /api/notes/:id 
 app.delete("/api/notes/:id", async function (req, res) {
   const chosenNote = req.params.id; //title of note
 
@@ -97,9 +95,7 @@ app.delete("/api/notes/:id", async function (req, res) {
     if(err) {
       console.log(err);
     }
-    // JSON.stringify(JSON.parse(data));
     // JSON.parse(data)
-    // res.json(JSON.parse(data));
   });
   
    const parsedNotes = JSON.parse(savedNotes);
@@ -108,11 +104,11 @@ app.delete("/api/notes/:id", async function (req, res) {
   console.log("Did it work?  " + parsedNotes[0].title)
 
   const newNotes = parsedNotes.filter(function (i) { //found on t.ly/Tclv
+   //The i is an iterator, so i.title = object[0].title, object[1].title...
     return chosenNote !== i.title //returns only those objects whose title are not equal to chosenNote
   });
 
   console.log(newNotes);
-
   
   const sendNotes = JSON.stringify(newNotes);
 
