@@ -30,22 +30,36 @@ app.get("/api/notes", async function (req, res) {
       // console.log("hello! im triggered (get)")
       const data = await fs.readFile("./db/db.json", "utf8");
       res.json(JSON.parse(data));
-      //console.log("This is at the get" + data);//shows object within array in db.json
+      //This is where I need to do something to display note when clicked!
+      // console.log("This is at the get" + data);//shows object within array in db.json
   } catch (err) {
       res.status(500).end("Server failed at get");
   }
 });
 
-// GET - /api/notes/:id NEED TO HAVE EACH SAVED NOTE TO HAVE THEIR OWN ID
-// app.get("/api/notes/:id", async function (req, res) {
-//   try{
-//     const data = await fs.readFile("")
-//   }
-// });
+// DELETE - /api/notes/:id NEED TO HAVE EACH SAVED NOTE TO HAVE THEIR OWN ID
+app.delete("/api/notes/:id", async function (req, res) {
+  const chosenNote = req.params.id;
 
-//NEED TO ASSIGN IDS TO EACH NOTE TO HAVE IT DISPLAY WHEN CLICKED
+  console.log("you are clicking delete btn")
+
+  const data = await fs.readFile("./db/db.json", "utf8", function(err) {
+    const arrayJSON = res.json(JSON.parse(data));
+    
+    console.log("This is at the DELETE" + arrayJSON);
+  });
+  
+
+  // for(let i = 0; i < arrayJSON.length; i++) {
+  //   if(choseNote === arrayJSON)
+  // }
+  // console.log(chosenNote);
+
+});
+
 // POST - /api/notes
 app.post("/api/notes", async function (req, res) {
+  console.log("did I post?");
   try {
     // console.log("hello! im triggered (post)")
       const newNote = req.body;
@@ -53,7 +67,8 @@ app.post("/api/notes", async function (req, res) {
 
       const data = await fs.readFile("./db/db.json", "utf8");
       
-      if (data.charAt(0) !== "") {
+      //because empty array
+      if (data.length > 2) {
         console.log("There are notes saved here")
         //Parsing the data from json file, and then stringifying it 
         let str = JSON.stringify(JSON.parse(data)); //found at t.ly/mscR
@@ -65,47 +80,29 @@ app.post("/api/notes", async function (req, res) {
   
         // Making the newly added note into a string
         const stringNote = JSON.stringify(newNote);
-        // console.log("str note:     " + stringNote)
+        console.log("str note:     " + newNote.title)
   
         //Concatenating the old and new data
         console.log("str append:   " + `${str},${stringNote}]`)
         await fs.writeFile("./db/db.json", `${str},${stringNote}]`);
   
-  
-        //Make window reload after post
-        window.location.reload();
+        res.send();
+       
 
       } else {
         console.log("This is the first saved note");
 
         const stringNote = JSON.stringify(newNote);
         await fs.writeFile("./db/db.json", `[${stringNote}]`);
-
-        window.location.reload();
+        res.send();
       }
-
 
   } catch (err) {
       res.status(500).end("Server failed at post");
   }
 });
 
-// DELETE - /api/notes First need to have the GET working 
-// app.delete("/api/notes", async function (req, res) {
-//   try {
-//     console.log("Hello! I am triggered (delete)")
-//     // const data = await fs.readFile("./db/db.json", "utf8");
-//     // res.json(JSON.parse(data));
-//     // //Parsing the data from json file, and then stringifying it 
-//     // let str = JSON.stringify(JSON.parse(data));
-//     // console.log(str);
 
-
-//   } catch (err) {
-//     res.status(500).end("Server failed at delete");
-//   }
-
-// });
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)

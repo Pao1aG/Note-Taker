@@ -51,6 +51,7 @@ const deleteNote = (id) =>
   });
 
 const renderActiveNote = () => {
+  console.log("Im rendering active note! " + activeNote.id);
   hide(saveNoteBtn);
 
   if (activeNote.id) {
@@ -84,7 +85,7 @@ const handleNoteDelete = (e) => {
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
-
+console.log(" This doesnt have an id? : " + noteId)
   if (activeNote.id === noteId) {
     activeNote = {};
   }
@@ -98,6 +99,7 @@ const handleNoteDelete = (e) => {
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {
   e.preventDefault();
+  console.log("I clicked: " + e.target.parentElement.getAttribute('data-note'));
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
   renderActiveNote();
 };
