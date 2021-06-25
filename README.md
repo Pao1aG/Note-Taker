@@ -17,6 +17,8 @@ This application is run with Node.js and Express.js. The user can create and sav
 
 * [Questions](#questions)
 
+---
+
 ## License
 
 This project is licensed under the MIT License. To learn more visit:   
