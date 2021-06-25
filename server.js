@@ -112,6 +112,11 @@ app.delete("/api/notes/:id", async function (req, res) {
   });
 
   console.log(newNotes);
+
+  
+  const sendNotes = JSON.stringify(newNotes);
+
+  await fs.writeFile("./db/db.json", sendNotes);
   
   res.send();
 });
