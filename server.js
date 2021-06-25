@@ -37,37 +37,22 @@ app.get("/api/notes", async function (req, res) {
   }
 });
 
-// DELETE - /api/notes/:id NEED TO HAVE EACH SAVED NOTE TO HAVE THEIR OWN ID
-app.delete("/api/notes/:id", async function (req, res) {
-  const chosenNote = req.params.id;
-
-  console.log("you are clicking delete btn")
-
-  const data = await fs.readFile("./db/db.json", "utf8", function(err) {
-    const arrayJSON = res.json(JSON.parse(data));
-    
-    console.log("This is at the DELETE" + arrayJSON);
-  });
-  
-
-  // for(let i = 0; i < arrayJSON.length; i++) {
-  //   if(choseNote === arrayJSON)
-  // }
-  // console.log(chosenNote);
-
-});
-
 // POST - /api/notes
-app.post("/api/notes", async function (req, res) {
+app.post("/api/notes/", async function (req, res) {
   console.log("did I post?");
   try {
-    // console.log("hello! im triggered (post)")
-      const newNote = req.body;
-      console.log(newNote); //shows new object
+     const newNote = req.body;
+     newNote.id = req.body.title;
+    //  var newNote = {
+    //    title: req.body.title,
+    //    text: req.body.text,
+    //    id: req.body.title
+    //  };
+      //console.log(newNote);
 
       const data = await fs.readFile("./db/db.json", "utf8");
       
-      //because empty array
+      //because empty array when starting
       if (data.length > 2) {
         console.log("There are notes saved here")
         //Parsing the data from json file, and then stringifying it 
@@ -100,6 +85,35 @@ app.post("/api/notes", async function (req, res) {
   } catch (err) {
       res.status(500).end("Server failed at post");
   }
+});
+
+// DELETE - /api/notes/:id NEED TO HAVE EACH SAVED NOTE TO HAVE THEIR OWN ID
+app.delete("/api/notes/:id", async function (req, res) {
+  const chosenNote = req.params.id; //title of note
+
+  console.log("you are clicking delete btn: " + chosenNote)
+
+  const savedNotes = await fs.readFile("./db/db.json", "utf8", function(err, data) {
+    if(err) {
+      console.log(err);
+    }
+    // JSON.stringify(JSON.parse(data));
+    // JSON.parse(data)
+    // res.json(JSON.parse(data));
+  });
+  
+   const parsedNotes = JSON.parse(savedNotes);
+
+  console.log("These are the saved notes in json " + savedNotes);
+  console.log("Did it work?  " + parsedNotes[0].title)
+
+  const newNotes = parsedNotes.filter(function (i) { //found on t.ly/Tclv
+    return chosenNote !== i.title //returns only those objects whose title are not equal to chosenNote
+  });
+
+  console.log(newNotes);
+  
+  res.send();
 });
 
 
