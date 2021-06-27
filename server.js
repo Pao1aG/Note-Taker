@@ -3,7 +3,7 @@ const fs = require("fs/promises");
 const express = require("express");
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Parses the body of the request
 // Places the data on `req.body`
