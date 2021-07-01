@@ -53,7 +53,7 @@ Click on Get Started and then create and save your notes!
 ![Screenshots of Note Taker App](./public/assets/images/getStarted.png)
 ![Screenshots of Note Taker App](./public/assets/images/noteTaker.png)
 
-> For a demo of this application, [Watch Here]()
+> For a demo of this application, [Visit Heroku](https://note-taker-pg.herokuapp.com/)
 
 ## Credits
 
